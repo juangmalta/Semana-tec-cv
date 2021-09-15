@@ -1,4 +1,3 @@
 # Semana tec cv
- proyecto de cv 
-test
+ Un proyecto con el lenguaje de progamacion python con la libreria opencv
 
