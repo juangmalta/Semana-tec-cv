@@ -23,7 +23,7 @@ while True:
 	ret,frame = cap.read()
 	if ret == False: break
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-	gray = cv2.medianBlur(gray,25)
+	gray = cv2.medianBlur(gray,15)# el num se puede aumentar o disminuir dependiendo de lo borroso que se desee
 	edges=cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,9,9)
 	auxFrame = gray.copy()
 	#color=cv2.bilateralFilter(imagePaths,9,250,250)
