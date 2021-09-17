@@ -23,11 +23,11 @@ while True:
 	ret,frame = cap.read()
 	if ret == False: break
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-	gray = cv2.medianBlur(gray,15)# el num se puede aumentar o disminuir dependiendo de lo borroso que se desee
+	gray = cv2.medianBlur(gray,5)# el num se puede aumentar o disminuir dependiendo de lo borroso que se desee
 	edges=cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,9,9)
 	auxFrame = gray.copy()
-	#color=cv2.bilateralFilter(imagePaths,9,250,250)
-	cartoon=cv2.bitwise_and(gray,gray,mask=edges)
+	color=cv2.bilateralFilter(frame,9,250,250)
+	cartoon=cv2.bitwise_and(color,color,mask=edges)
 
 	faces = faceClassif.detectMultiScale(gray,1.3,5)
 
@@ -49,7 +49,7 @@ while True:
 	cv2.imshow('cartoon',cartoon)
 	#cv2.imshow("Cartoon", cartoon)
 	k = cv2.waitKey(1)
-	if k == 27:
+	if k == 27:  #break with esc
 		break
 
 cap.release()
