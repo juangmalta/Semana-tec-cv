@@ -1,9 +1,11 @@
 import cv2
 import os
 import numpy as np
+import csv
 
-dataPath = 'C:/Users/mprec/OneDrive - Instituto Tecnologico y de Estudios Superiores de Monterrey/S3/STEC' #Cambia a la ruta donde hayas almacenado Data
+dataPath = '/home/abi/git_workspace/Semana-tec-cv/Data' #Cambia a la ruta donde hayas almacenado Data
 imagePaths = os.listdir(dataPath)
+attendance = [False] * len(imagePaths)
 print('imagePaths=',imagePaths)
 
 
@@ -12,6 +14,7 @@ face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 # Leyendo el modelo
 face_recognizer.read('modeloLBPHFace.xml')
 cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture('/home/abi/git_workspace/Semana-tec-cv/Videos/juanZ.mp4') #Video try
 
 # Check if the webcam is opened correctly
 if not cap.isOpened():
@@ -41,6 +44,8 @@ while True:
 		if result[1] < 70:
 			cv2.putText(frame,'{}'.format(imagePaths[result[0]]),(x,y-25),2,1.1,(0,255,0),1,cv2.LINE_AA)
 			cv2.rectangle(frame, (x,y),(x+w,y+h),(0,255,0),2)
+			attendance[result[0]]=True
+
 		else:
 			cv2.putText(frame,'Desconocido',(x,y-20),2,0.8,(0,0,255),1,cv2.LINE_AA)
 			cv2.rectangle(frame, (x,y),(x+w,y+h),(0,0,255),2)
@@ -52,5 +57,12 @@ while True:
 	if k == 27:  #break with esc
 		break
 
+#Creararchivo attendnce
+with open('attendance.csv', 'w') as file:
+	for index, alumno in enumerate(imagePaths):
+		file.write("{}, {}".format(alumno, "Present" if attendance[index] else "Absent"))
+		file.write('\n')
+
+file.close()
 cap.release()
 cv2.destroyAllWindows()
