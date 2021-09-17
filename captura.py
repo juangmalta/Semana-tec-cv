@@ -1,17 +1,18 @@
+#Este progama a partir de un video genera una carpeta con muchas imagenes para poder entrenar a la inteligencia artificial
 import cv2
 import os
 import imutils
-
-personName = 'Leo'
-dataPath = 'C:/Users/jp_ga/Dropbox/PC/Documents/tec/Semestre 3/semana tec 1/Semana-tec-cv/Data' #Cambia a la ruta donde hayas almacenado Data
+#Se creara una carpeta para guardar los datos
+personName = 'JuanZ'
+dataPath = 'D:\Github Proyectos\Semana-tec-cv\Data' #Cambia a la ruta donde hayas almacenado Data
 personPath = dataPath + '/' + personName
 
 if not os.path.exists(personPath):
 	print('Carpeta creada: ',personPath)
 	os.makedirs(personPath)
-
+#Linea en tomamos el video o grabamos uno en tiempo real
 #cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
-cap = cv2.VideoCapture('leo.mp4')
+cap = cv2.VideoCapture('Videos\juanZ.mp4')
 
 faceClassif = cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
 count = 0
