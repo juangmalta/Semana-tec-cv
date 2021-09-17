@@ -1,21 +1,16 @@
 import cv2
 import os
+import numpy as np
 
-dataPath = 'C:/Users/leomi/OneDrive/Documentos/GitHub/Semana-tec-cv/Data' #Cambia a la ruta donde hayas almacenado Data
+dataPath = 'C:/Users/mprec/OneDrive - Instituto Tecnologico y de Estudios Superiores de Monterrey/S3/STEC' #Cambia a la ruta donde hayas almacenado Data
 imagePaths = os.listdir(dataPath)
 print('imagePaths=',imagePaths)
 
-#face_recognizer = cv2.face.EigenFaceRecognizer_create()
-#face_recognizer = cv2.face.FisherFaceRecognizer_create()
+
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 
 # Leyendo el modelo
-#face_recognizer.read('modeloEigenFace.xml')
-#face_recognizer.read('modeloFisherFace.xml')
 face_recognizer.read('modeloLBPHFace.xml')
-
-#cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
-#cap = cv2.VideoCapture('manuel.mp4')
 cap = cv2.VideoCapture(0)
 
 # Check if the webcam is opened correctly
@@ -28,7 +23,11 @@ while True:
 	ret,frame = cap.read()
 	if ret == False: break
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	gray = cv2.medianBlur(gray,25)
+	edges=cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,9,9)
 	auxFrame = gray.copy()
+	#color=cv2.bilateralFilter(imagePaths,9,250,250)
+	cartoon=cv2.bitwise_and(gray,gray,mask=edges)
 
 	faces = faceClassif.detectMultiScale(gray,1.3,5)
 
@@ -38,23 +37,6 @@ while True:
 		result = face_recognizer.predict(rostro)
 
 		cv2.putText(frame,'{}'.format(result),(x,y-5),1,1.3,(255,255,0),1,cv2.LINE_AA)
-		'''
-		# EigenFaces
-		if result[1] < 5700:
-			cv2.putText(frame,'{}'.format(imagePaths[result[0]]),(x,y-25),2,1.1,(0,255,0),1,cv2.LINE_AA)
-			cv2.rectangle(frame, (x,y),(x+w,y+h),(0,255,0),2)
-		else:
-			cv2.putText(frame,'Desconocido',(x,y-20),2,0.8,(0,0,255),1,cv2.LINE_AA)
-			cv2.rectangle(frame, (x,y),(x+w,y+h),(0,0,255),2)
-
-		# FisherFace
-		if result[1] < 500:
-			cv2.putText(frame,'{}'.format(imagePaths[result[0]]),(x,y-25),2,1.1,(0,255,0),1,cv2.LINE_AA)
-			cv2.rectangle(frame, (x,y),(x+w,y+h),(0,255,0),2)
-		else:
-			cv2.putText(frame,'Desconocido',(x,y-20),2,0.8,(0,0,255),1,cv2.LINE_AA)
-			cv2.rectangle(frame, (x,y),(x+w,y+h),(0,0,255),2)
-		'''
 		# LBPHFace
 		if result[1] < 70:
 			cv2.putText(frame,'{}'.format(imagePaths[result[0]]),(x,y-25),2,1.1,(0,255,0),1,cv2.LINE_AA)
@@ -64,6 +46,8 @@ while True:
 			cv2.rectangle(frame, (x,y),(x+w,y+h),(0,0,255),2)
 
 	cv2.imshow('frame',frame)
+	cv2.imshow('cartoon',cartoon)
+	#cv2.imshow("Cartoon", cartoon)
 	k = cv2.waitKey(1)
 	if k == 27:
 		break
